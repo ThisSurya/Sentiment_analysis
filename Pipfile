@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+streamlit = "*"
+keras = "*"
+setuptools = "*"
+numpy = "==1.26.0"
+tensorflow = "*"
+scikit-learn = "*"
+sastrawi = "*"
+keras-preprocessing = "*"
+matplotlib = "*"
+seaborn = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
