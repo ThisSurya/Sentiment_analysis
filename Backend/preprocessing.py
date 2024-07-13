@@ -7,8 +7,11 @@ from sklearn.model_selection import train_test_split
 from keras_preprocessing.sequence import pad_sequences
 from keras_preprocessing.text import Tokenizer
 import tensorflow
-import streamlit as st
+import pandas as pd
+from tensorflow.keras.layers import SpatialDropout1D
+import keras
 
+# Load the model
 # Meliputi emotikon, duplikat data, URLS, tag
 def remove_dirty(text):
     
@@ -74,17 +77,6 @@ def remove_slangword(text):
             data = f.read()
             f.close()
     slangdict = json.loads(data)
-    
-#     output = "stopandslangremoved.txt"
-    
-#     with open(output, "w") as f:
-#         text = inputstream.splitlines()
-#         inputstream.close()
-        
-#         for line in text:
-#             res = " ".join(slangdict.get(ele, ele) for ele in line.split())
-            
-#             f.write(str(res) + "\n")
     textiterable = text.splitlines()
     
     new_text = []
@@ -140,9 +132,46 @@ def padding_sequence(dataframe):
                       oov_token = oov_tok
     )
     tokenizer.fit_on_texts(dataframe)
-    st.write(dataframe)
     training_sequences = tokenizer.texts_to_sequences(dataframe)
-    st.write(training_sequences)
+    new_data = tensorflow.keras.preprocessing.sequence.pad_sequences(training_sequences,
+                                    maxlen = max_len,
+                                    padding = 'pre',
+                                    truncating = 'pre'
+    #                                 padding = padding_type,
+    #                                 truncating = trunc_type
+                                )
+    
+    return new_data
+
+def predict_text(text, threshold=0.5):
+    model = keras.models.load_model('lstm_model.h5', custom_objects={'SpatialDropout1D': SpatialDropout1D})
+    
+    data = pd.read_csv('sampilng.csv')  # Replace with actual file path
+    X_train = data['tweet']
+    
+    max_len = 150
+    oov_tok = "<OOV>"
+    vocab_size = 450
+    
+    tokenizer = Tokenizer(num_words=vocab_size, char_level=False, oov_token=oov_tok)
+    tokenizer.fit_on_texts(X_train)
+    seq = tokenizer.texts_to_sequences([text])
+    padded = pad_sequences(seq, maxlen=max_len, padding='pre', truncating='pre')
+    pred = model.predict(padded)
+    class_pred = (pred >= threshold).astype(int)
+    return class_pred
+
+def padding_sequence_single(dataframe):
+    max_len = 150
+    oov_tok = '<OOV>' # out of vocabulary token
+    
+    tokenizer = tensorflow.keras.preprocessing.text.Tokenizer(
+        num_words = max_len,
+                    char_level = False,
+                      oov_token = oov_tok
+    )
+    tokenizer.fit_on_texts(dataframe)
+    training_sequences = tokenizer.texts_to_sequences([dataframe])
     new_data = tensorflow.keras.preprocessing.sequence.pad_sequences(training_sequences,
                                     maxlen = max_len,
                                     padding = 'pre',
