@@ -46,6 +46,8 @@ def run():
         # Display proses
         st.write("Dataset yang masih kotor")
         st.write(raw_dataframe.head())
+        st.write("Dataset yang telah dibersihkan")
+        st.write(dataframe.head())
         st.write("Dataset yang belum dilabel")
         st.write(new_dataframe['tweet'].head())
         st.write("Dataset yang diubah kedalam format vektor")
