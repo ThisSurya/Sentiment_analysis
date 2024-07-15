@@ -10,6 +10,7 @@ import tensorflow
 import pandas as pd
 from tensorflow.keras.layers import SpatialDropout1D
 import keras
+from .localSastrawi import create_stop_word_factory, getStopWord
 
 # Load the model
 # Meliputi emotikon, duplikat data, URLS, tag
@@ -63,12 +64,22 @@ def case_folding(text):
     return text
 
 def remove_stopword(text):
-    factory = StopWordRemoverFactory()
-    stopwords = factory.get_stop_words()
-    stopword = factory.create_stop_word_remover()
+    # factory = StopWordRemoverFactory()
+    # stopwords = factory.get_stop_words()
+    # stopword = factory.create_stop_word_remover()
     
-    text = stopword.remove(text)
-    return text
+    # text = stopword.remove(text)
+    
+    
+    stopword = getStopWord()
+    new_text = []
+    for row in text.splitlines():
+        if(row != ''):
+            words = [word for word in row.split() if word not in stopword]
+            sentence = " ".join(words)
+            new_text.append(sentence)
+    # text = stopword.remove(text)
+    return "\n".join(new_text)
             
 # menghapus slangword
 def remove_slangword(text):
@@ -81,6 +92,7 @@ def remove_slangword(text):
     
     new_text = []
     for line in textiterable:
+        
         if(line != ''):
             word = " ". join(slangdict.get(ele, ele) for ele in line.split())
             new_text.append(word)

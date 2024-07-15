@@ -40,14 +40,16 @@ def run():
         # Mempersiapkan untuk menggunakan wordcloud
         new_dataframe = data_modification.concatenation(dataframe, y_result)
         dataframe_negative, dataframe_positive = data_modification.split_neg_post(new_dataframe)
+        st.write("Disini declare wordcloud 1")
         wordcloud_positive = data_modification.count_word(dataframe_positive)
+        st.write("Disini declare wordcloud 2")
         wordcloud_negative = data_modification.count_word(dataframe_negative)
         
         # Display proses
         st.write("Dataset yang masih kotor")
-        st.write(raw_dataframe.head())
+        st.write(raw_dataframe)
         st.write("Dataset yang telah dibersihkan")
-        st.write(dataframe.head())
+        st.write(dataframe)
         st.write("Dataset yang belum dilabel")
         st.write(new_dataframe['tweet'].head())
         st.write("Dataset yang diubah kedalam format vektor")

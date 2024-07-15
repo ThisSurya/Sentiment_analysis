@@ -1,5 +1,6 @@
 import pandas as pd;
 from wordcloud import WordCloud, STOPWORDS
+import streamlit as st
 def concatenation(series_data, numpyarray_result):
     result_dataframe = pd.DataFrame(numpyarray_result, columns=['label'])
     new_data = pd.concat([series_data, result_dataframe], axis=1)
@@ -21,12 +22,12 @@ def count_word(dataframe_result):
         word = str(val['tweet'])
         tokens = word.split()
         
-        count_word = " ".join(tokens)+" "
+        count_word += " ".join(tokens)+" "
     wordcloud = WordCloud(width=800, height=800,
                           background_color='white',
                           min_font_size=10,
                           stopwords=STOPWORDS
-                          ).generate(word)
+                          ).generate(count_word)
     
     return wordcloud
     
