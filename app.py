@@ -71,7 +71,7 @@ def run():
             plt.imshow(wordcloud_negative)
             st.pyplot(fig_wordcloud_neg)
         else:
-            st.write(f"Video tersebut memiliki konten yang: ")
+            st.write(f"Hasil sentiment pada komentar: ")
             st.write("# positive")
             fig_wordcloud_pos, ax_wordcloud_pos = plt.subplots()
             plt.imshow(wordcloud_positive)
